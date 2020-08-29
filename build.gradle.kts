@@ -31,7 +31,7 @@ repositories {
     }
 }
 
-group = "hu.simplexion.zakadabar.template"
+group = "hu.simplexion.zakadabar"
 version = "2020.8.29"
 
 tasks.withType<KotlinCompile>().all {
