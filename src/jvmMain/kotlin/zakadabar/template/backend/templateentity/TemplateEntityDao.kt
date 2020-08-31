@@ -22,7 +22,7 @@ class TemplateEntityDao(id: EntityID<Long>) : LongEntity(id) {
 
     fun toDto(entityDao: EntityDao) = TemplateEntityDto(
         id = id.value,
-        entityDto = null, // do not include entity by default
+        entityRecord = null, // do not include entity by default
         name = entityDao.name,
         templateField1 = templateField1,
         templateField2 = templateField2

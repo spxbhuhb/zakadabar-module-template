@@ -18,9 +18,7 @@
 
 package zakadabar.template.frontend.templateentity
 
-import zakadabar.stack.data.entity.EntityDto
-import zakadabar.stack.frontend.FrontendContext
-import zakadabar.stack.frontend.builtin.desktop.messages.EntityChildrenLoaded
+import zakadabar.stack.data.entity.EntityRecordDto
 import zakadabar.stack.frontend.builtin.icon.Icons
 import zakadabar.stack.frontend.builtin.navigator.EntityNavigator
 import zakadabar.stack.frontend.builtin.navigator.NewEntity
@@ -47,22 +45,19 @@ class NewTemplateEntity(newEntity: NewEntity) : NewEntityItemWithName(newEntity)
 
     }
 
-    override suspend fun create(parentDto: EntityDto?, name: String) {
+    override suspend fun create(parentDto: EntityRecordDto?, name: String) {
 
         val parentId = parentDto?.id
 
-        val entityDto = TemplateEntityDto(
+        val dto = TemplateEntityDto(
             id = 0,
-            entityDto = EntityDto.new(parentId, TemplateEntityDto.type, name),
+            entityRecord = EntityRecordDto.new(parentId, TemplateEntityDto.type, name),
             name = "name",
             templateField1 = "value1",
             templateField2 = "value2"
         )
 
-        launch {
-            entityDto.create()
-            FrontendContext.dispatcher.postSync { EntityChildrenLoaded(parentId) }
-        }
+        launch { dto.create() }
 
     }
 

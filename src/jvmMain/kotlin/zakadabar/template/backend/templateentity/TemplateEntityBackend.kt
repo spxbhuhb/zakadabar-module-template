@@ -46,7 +46,7 @@ object TemplateEntityBackend : EntityRestBackend<TemplateEntityDto> {
             .map {
                 TemplateEntityDto(
                     id = it[EntityTable.id].value,
-                    entityDto = null,
+                    entityRecord = null,
                     name = it[EntityTable.name],
                     templateField1 = it[TemplateEntityTable.templateField1],
                     templateField2 = it[TemplateEntityTable.templateField2],
@@ -56,7 +56,7 @@ object TemplateEntityBackend : EntityRestBackend<TemplateEntityDto> {
 
     override fun create(executor: Executor, dto: TemplateEntityDto) = transaction {
 
-        val entityDto = dto.entityDto?.requireType(TemplateEntityDto.type) ?: throw IllegalArgumentException()
+        val entityDto = dto.entityRecord?.requireType(TemplateEntityDto.type) ?: throw IllegalArgumentException()
         val entityDao = EntityDao.create(executor, entityDto) // performs authorization
 
         val dao = TemplateEntityDao.new(entityDao.id.value) {
@@ -69,7 +69,7 @@ object TemplateEntityBackend : EntityRestBackend<TemplateEntityDto> {
 
     override fun update(executor: Executor, dto: TemplateEntityDto) = transaction {
 
-        val entityDto = dto.entityDto?.requireId(dto.id) ?: throw IllegalArgumentException()
+        val entityDto = dto.entityRecord?.requireId(dto.id) ?: throw IllegalArgumentException()
         val entityDao = EntityDao.update(executor, entityDto) // performs authorization
 
         val dao = TemplateEntityDao[dto.id]
