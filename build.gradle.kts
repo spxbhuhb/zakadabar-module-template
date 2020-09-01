@@ -2,7 +2,6 @@
  * Copyright © 2020, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import java.util.*
 
 plugins {
     kotlin("multiplatform") version "1.4.0"
@@ -26,7 +25,7 @@ repositories {
         mavenLocal()
     }
 
-    fun gps(project : String) {
+    fun gps(project: String) {
         maven {
             name = "gps-$project"
             url = uri("https://maven.pkg.github.com/$project")
@@ -34,8 +33,8 @@ repositories {
                 gradleMetadata()
             }
             credentials {
-                username = properties["github.user"].toString()
-                password = properties["github.key"].toString()
+                username = (properties["github.user"] ?: System.getenv("USERNAME")).toString()
+                password = (properties["github.key"] ?: System.getenv("TOKEN")).toString()
             }
         }
     }
@@ -69,7 +68,7 @@ kotlin {
 // Signing and publishing
 // -------------------------------------------------------------
 
-if (!isSnapshot) { // Signing Gradle Module Metadata is not supported for snapshot dependencies.
+if (! isSnapshot) { // Signing Gradle Module Metadata is not supported for snapshot dependencies.
     signing {
         useGpgCmd()
         sign(publishing.publications)
@@ -80,24 +79,16 @@ publishing {
 
     val path = "template/template" // github owner/project name, like spxbhuhb/zakadabar-samples
 
-    val properties = Properties()
-    val propFile = File(project.findProperty("gpr.properties").toString())
-
-    if (isSnapshot) {
-        repositories {
+    repositories {
+        if (isSnapshot) {
             mavenLocal()
-        }
-    } else {
-
-        properties.load(propFile.inputStream())
-
-        repositories {
+        } else {
             maven {
                 name = "gps"
                 url = uri("https://maven.pkg.github.com/$path")
                 credentials {
-                    username = properties["user"].toString()
-                    password = properties["key"].toString()
+                    username = (properties["github.user"] ?: System.getenv("USERNAME")).toString()
+                    password = (properties["github.key"] ?: System.getenv("TOKEN")).toString()
                 }
             }
         }
